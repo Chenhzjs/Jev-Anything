@@ -9,6 +9,8 @@ description = "Jev decision adapter for GUI semantic workflows"
 requires-python = ">=3.10"
 dependencies = ["requests>=2.31"]
 
+[project.scripts]
+jev-anything-workbench = "jev_anything.server:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
-

@@ -5,9 +5,17 @@
 Jev Anything is a Jev-focused decision interface for live GUI semantics.
 GUI2TUI reads and executes; Jev selects among legal candidates.
 
+## Completed
+
+- [x] Initialize the local Git repository and push the first plan to the
+      private GitHub repository.
+- [x] Add the Python Jev provider for `miyang/jev-1.13`.
+- [x] Keep the API key out of source control through `.env` and `.gitignore`.
+- [x] Add the initial README, product boundary and staged TODO.
+
 ## Phase 0: contract and repository
 
-- [ ] Create the repository package and local development instructions.
+- [ ] Finish the repository package and local development instructions.
 - [ ] Define versioned `Observation`, `Candidate`, `Decision` and `Outcome`.
 - [ ] Define explicit states: `observing`, `candidates_ready`, `deciding`,
       `validating`, `executing`, `reading_back`, `confirmed`, `abstained`,
@@ -29,7 +37,8 @@ GUI2TUI reads and executes; Jev selects among legal candidates.
 
 ## Phase 2: Jev decision adapter
 
-- [ ] Implement the `miyang/jev-1.13` decisions provider.
+- [x] Implement the `miyang/jev-1.13` decisions provider.
+- [ ] Confirm the local smoke test succeeds with the current `.env` key.
 - [ ] Start with `choice` for candidate selection and `noul` for abstain or
       readiness decisions.
 - [ ] Return only a candidate ID or `abstain`; never accept invented actions.
@@ -111,4 +120,3 @@ one real GUI
 + one authoritative readback
 + one visible live trace
 ```
-
