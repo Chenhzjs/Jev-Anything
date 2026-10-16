@@ -5,6 +5,81 @@
 Jev Anything is a Jev-focused decision interface for live GUI semantics.
 GUI2TUI reads and executes; Jev selects among legal candidates.
 
+## Plugin Stabilization Update (2026-10-14)
+
+- [x] Extract a one-step DecisionPlugin with a typed backend interface.
+- [x] Share v1 records across live execution, public imports and event review.
+- [x] Validate freshness, scope, current candidate membership and local risk.
+- [x] Return unsupported when required bindings/operations are unavailable.
+- [x] Deduplicate request IDs within the plugin lifetime; no automatic retries.
+- [x] Treat execution/readback failures as unknown rather than failed effects.
+- [x] Add declarative home, support routing and memory review GUI scenarios.
+- [x] Add an independent task-board application identity and fixture switching.
+- [x] Expose fixture configuration and stable HTTP validation errors.
+- [x] Research official Jev examples and document adaptations and limitations.
+- [ ] Add an independent application/toolkit beyond the GTK scenario harness.
+- [ ] Add native receipts/freshness when exposed by GUI2TUI's public interface.
+- [ ] Persist request results across restarts and bound retention.
+
+Formal benchmarking is deferred. The current v1 plugin is the collaboration
+boundary for GUI2TUI; current details are in PLUGIN.md and
+GUI2TUI_INTEGRATION.md. GUI2TUI upstream remains unchanged.
+
+## Docker Qualification Update (2026-10-14)
+
+The earlier mock prototype did not complete phases 0-6. The current Docker
+fixture now has real GUI2TUI observation, public PTY execution, actual GUI
+capture, SSE events, Jev integration, 10 end-to-end scenarios, 26 unit tests,
+and an identical-observation Jev/rule comparison. See TEST_REPORT.md.
+
+Completed within the fixed fixture scope:
+- [x] Headless Linux Docker runtime on Apple Silicon; no separate VM setup.
+- [x] Real AT-SPI discovery and GUI2TUI scene with three initial controls.
+- [x] Real Jev choice and noul smoke tests.
+- [x] Public GUI2TUI operation plus independent AT-SPI checked-state assertion.
+- [x] Success, abstain, stale rejection and unknown effect live scenarios.
+- [x] Actual GUI screenshot, PTY view and incremental SSE lifecycle.
+- [x] Pause-before-dispatch, reset, recorded-event review, desktop/mobile QA.
+- [x] Model latency, request ID and provider-reported cost recording.
+- [x] Same recorded observation replayed through Jev and a rule baseline.
+
+Remaining before a general open-source release:
+- [x] Unify public/live/event-review data contracts; old simulated records are legacy.
+- [x] Verify configuration reuse with a second application identity and five
+      reusable domain scenarios, including reversed candidate order.
+- [x] Add a stable GTK Tic-Tac-Toe demo with four legal moves and readback.
+- [x] Add a one-command Docker workbench launcher and stop command.
+- [x] Probe a real Epiphany/WebKit application and report missing executable
+      semantics as `unsupported`.
+- [x] Extract a reusable GUI2TUI scene adapter with explicit capability gaps.
+- [x] Add stable plugin error codes and public adapter exports.
+- [x] Add adapter, API-lock, duplicate-application and timing regression tests.
+- [ ] Replace the current configured-label bridge with a future native
+      structured GUI2TUI capability export and native generation/scope/ticket
+      validation when upstream exposes those fields.
+- [ ] Generic sensitive-field redaction before supporting arbitrary apps.
+- [ ] Distinguish backend accepted delivery from PTY submission using receipts.
+- [ ] Persist/resume traces across server restarts and bound event retention.
+- [ ] Expand pause/disconnect/browser and backend fault-injection coverage.
+- [ ] Independent held-out tasks, generic candidate recall and meaningful
+      task-success metrics; current sample is not a public benchmark.
+
+## Submodule handoff status
+
+- [x] Keep Jev Anything independently installable as a Python package.
+- [x] Document `git submodule add` and pinned checkout usage.
+- [x] Document the GUI2TUI/Jev Anything responsibility boundary.
+- [x] Document the current text-scene/PTTY compatibility bridge.
+- [x] Propose a native structured scene and execution-receipt boundary.
+- [x] Provide package, unit-test and Docker acceptance commands for the
+      upstream author.
+- [ ] Publish a reviewed release commit for GUI2TUI to pin.
+- [ ] Replace the compatibility bridge after GUI2TUI exports native fields.
+
+The detailed original release checklist below retains unchecked items where
+the general requirement has not been met; fixture-only work is not equivalent
+to generic completion.
+
 ## Completed
 
 - [x] Initialize the local Git repository and push the first plan to the

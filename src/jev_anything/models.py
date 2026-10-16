@@ -1,4 +1,4 @@
-"""Versioned, JSON-friendly objects shared by the live loop and workbench."""
+"""Legacy simulated-demo records. Public plugin contracts live in plugin.py."""
 
 from __future__ import annotations
 
@@ -69,4 +69,3 @@ def as_json(value: Any) -> Any:
 
 def trace_id() -> str:
     return f"trace-{uuid4().hex[:12]}"
-

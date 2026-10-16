@@ -59,7 +59,7 @@ class DemoEngine:
         trace = trace_id()
         observation = self.observe()
         yield self.event(trace, "observe", "读取当前 GUI 语义", observation=as_json(observation))
-        yield self.event(trace, "candidates", "生成 3 个经过 GUI2TUI 约束的候选", candidates=[as_json(c) for c in observation.candidates])
+        yield self.event(trace, "candidates", "生成模拟候选（未接入 GUI2TUI）", candidates=[as_json(c) for c in observation.candidates])
         if force_stale:
             self.generation += 1
             yield self.event(trace, "stale", "GUI 在决策前发生变化，旧 generation 已失效")
@@ -72,8 +72,8 @@ class DemoEngine:
             selected = self.extract_choice(answers)
             reason = None
         except JevError as exc:
-            selected = "abstain"
-            reason = str(exc)
+            yield self.event(trace, "outcome", "决策请求失败，没有执行", outcome=as_json(Outcome("failed", "not_attempted", "none", observation.generation, self.generation, reason=str(exc))))
+            return
         latency = int((time.perf_counter() - start) * 1000)
         decision = Decision("abstained" if selected == "abstain" else "selected", None if selected == "abstain" else selected, None, getattr(self.provider(), "model", "miyang/jev-1.13"), latency, reason=reason)
         yield self.event(trace, "decision", "Jev 返回选择" if selected != "abstain" else "Jev 选择 abstain", decision=as_json(decision))
@@ -86,15 +86,16 @@ class DemoEngine:
             yield self.event(trace, "validation", "候选未通过 generation 或 membership 校验")
             yield self.event(trace, "outcome", "拒绝执行过期候选", outcome=as_json(outcome))
             return
-        yield self.event(trace, "validation", "候选通过 membership、scope 和风险校验", candidate_id=selected)
-        yield self.event(trace, "dispatch", f"GUI2TUI 执行：{candidate.label}", candidate_id=selected)
+        yield self.event(trace, "validation", "模拟候选通过 membership 和 generation 校验", candidate_id=selected)
+        yield self.event(trace, "dispatch", f"模拟执行：{candidate.label}", candidate_id=selected)
         before = self.generation
         self.apply(candidate)
         after = self.generation
         readback = self.observe()
-        outcome = Outcome("confirmed", "accepted", "confirmed", before, after, {"scene": readback.scene, "dark_mode": self.dark_mode})
-        yield self.event(trace, "readback", "重新读取 GUI 权威状态", observation=as_json(readback))
-        yield self.event(trace, "outcome", "操作已执行并由 readback 确认", outcome=as_json(outcome))
+        confirmed = candidate.id in {"c-theme", "c-notify"}
+        outcome = Outcome("confirmed" if confirmed else "unknown", "simulated", "confirmed" if confirmed else "unknown", before, after, {"scene": readback.scene, "dark_mode": self.dark_mode})
+        yield self.event(trace, "readback", "重新读取模拟状态", observation=as_json(readback))
+        yield self.event(trace, "outcome", "模拟操作结束", outcome=as_json(outcome))
 
     def apply(self, candidate: Candidate) -> None:
         if candidate.id == "c-theme":
@@ -112,9 +113,8 @@ class DemoEngine:
                     return answer[key]
         if isinstance(answer, str):
             return answer
-        return "abstain"
+        raise JevError("Malformed choice answer")
 
     @staticmethod
     def event(trace: str, kind: str, message: str, **data: Any) -> dict[str, Any]:
         return {"trace_id": trace, "kind": kind, "message": message, "timestamp": time.time(), **data}
-

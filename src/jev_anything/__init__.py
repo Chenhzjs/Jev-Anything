@@ -1,4 +1,5 @@
 from .jev import JevClient, JevError
-from .models import Candidate, Decision, Observation, Outcome
+from .adapter import ActionSpec, Gui2TuiSceneAdapter
+from .plugin import Candidate, Decision, Observation, Outcome, DecisionPlugin, CapabilityUnavailable, RunResult
 
-__all__ = ["Candidate", "Decision", "JevClient", "JevError", "Observation", "Outcome"]
+__all__ = ["ActionSpec", "Candidate", "Decision", "Gui2TuiSceneAdapter", "JevClient", "JevError", "Observation", "Outcome", "DecisionPlugin", "CapabilityUnavailable", "RunResult"]

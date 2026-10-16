@@ -1,0 +1,18 @@
+services:
+  workbench:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        HTTP_PROXY: ${DOCKER_BUILD_PROXY:-}
+        HTTPS_PROXY: ${DOCKER_BUILD_PROXY:-}
+    image: jev-anything-live
+    init: true
+    privileged: true
+    security_opt:
+      - seccomp=unconfined
+    ports:
+      - "127.0.0.1:8787:8787"
+    env_file: .env
+    environment:
+      HTTPS_PROXY: ${DOCKER_RUNTIME_PROXY:-}

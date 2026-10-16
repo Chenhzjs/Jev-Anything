@@ -29,6 +29,7 @@ class JevConfig:
             api_key=api_key,
             api_url=os.environ.get("JEV_API_URL", cls.api_url),
             model=os.environ.get("JEV_MODEL", cls.model),
+            timeout=float(os.environ.get("JEV_TIMEOUT_SECONDS", cls.timeout)),
         )
 
 
@@ -37,6 +38,8 @@ class JevClient:
 
     def __init__(self, config: JevConfig | None = None) -> None:
         self.config = config or JevConfig.from_env()
+        self.model = self.config.model
+        self.metadata = {}
 
     def decide(
         self,
@@ -61,8 +64,10 @@ class JevClient:
         except (requests.RequestException, ValueError) as exc:
             raise JevError(f"Jev request failed: {exc}") from exc
 
+        if not isinstance(body, Mapping):
+            raise JevError("Jev response is not an object")
         answers = body.get("answers")
         if not isinstance(answers, Mapping):
             raise JevError("Jev response does not contain an answers object")
+        self.metadata = {"request_id": body.get("id"), "usage": body.get("usage", {})}
         return answers
-
