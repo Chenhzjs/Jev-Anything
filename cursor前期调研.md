@@ -4,7 +4,7 @@
 >
 > 调研时间：2026-10-04（前期调研）
 > 整理时间：2026-10-11
-> 当前项目目录：`/Users/kiyotakali/jev-anything`
+> 当前项目目录：`<repository-root>`
 >
 > 相关项目：
 >
@@ -148,7 +148,7 @@ Jev 的具体 API、模型版本、字段名、延迟和价格仍然必须以 Ty
 
 ### 2.4 当前工作区
 
-前期调研时 `/Users/kiyotakali/jev-anything` 为空目录，没有现有实现和 git 历史，适合从协议、核心运行时和第一个 Tracer Bullet 直接起步。
+前期调研时 `<repository-root>` 为空目录，没有现有实现和 git 历史，适合从协议、核心运行时和第一个 Tracer Bullet 直接起步。
 
 ---
 
