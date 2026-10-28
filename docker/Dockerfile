@@ -1,6 +1,6 @@
 FROM rust:1.88-bookworm AS builder
 
-ARG GUI2TUI_COMMIT=7bf1116119775d5038376b18d077133e3f6f8ea2
+ARG GUI2TUI_COMMIT=4c8fb7a18fce254152fca87316c8ad1325d5affa
 WORKDIR /src
 RUN git clone https://github.com/Chenhzjs/GUI2TUI.git . \
     && git checkout "$GUI2TUI_COMMIT" \
@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && useradd --create-home --shell /bin/bash gui2tui
 
 COPY --from=builder /src/target/release/gui2tui /usr/local/bin/gui2tui
+COPY --from=builder /src/target/release/gui2tui-agent /usr/local/bin/gui2tui-agent
 COPY --from=builder /src/target/release/gui2tui-inspect /usr/local/libexec/gui2tui/gui2tui-inspect
 COPY --from=builder /src/target/release/gui2tui-local /usr/local/libexec/gui2tui/gui2tui-local
 COPY --from=builder /src/scripts/headless-session /usr/local/libexec/gui2tui/headless-session

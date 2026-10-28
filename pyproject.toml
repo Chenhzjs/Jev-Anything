@@ -9,8 +9,15 @@ description = "Jev decision adapter for GUI semantic workflows"
 requires-python = ">=3.10"
 dependencies = ["requests>=2.31", "pexpect>=4.9", "pyte>=0.8"]
 
+[project.optional-dependencies]
+tui = ["tokenizers"]
+
 [project.scripts]
 jev-anything-workbench = "jev_anything.live_server:main"
+jev-anything-tui = "jev_anything.tui:main"
+jev-anything-native = "jev_anything.native:main"
+jev-anything-workflow = "jev_anything.workflow:main"
+jev-anything-human-view = "jev_anything.human_view:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

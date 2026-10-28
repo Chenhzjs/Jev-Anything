@@ -10,13 +10,78 @@ The first release is a local, inspectable workbench rather than a hidden
 automation script. It shows the real application, the semantic TUI projection,
 the Jev decision, and the execution evidence in one place.
 
+## Current fork and shared TUI client
+
+This fork is maintained at [Chenhzjs/Jev-Anything](https://github.com/Chenhzjs/Jev-Anything)
+from [kiyotakali/Jev-Anything](https://github.com/kiyotakali/Jev-Anything).
+[GUI2TUI](https://github.com/Chenhzjs/GUI2TUI) is the primary project; this
+repository is its optional `integrations/jev-anything` submodule. It can also
+be installed separately. The Rust core and Human TUI do not require this client.
+
+The current spatial-TUI client reads the actual Human renderer plus small public
+state/operation references. It keeps the complete public document locally and
+uses Rust navigation to reach other content. Incremental chat, bounded batches,
+completion evidence and explicit human handoff are documented in
+[TUI_READER.md](docs/TUI_READER.md). This is partial viewport input; it is not
+a lossless full-document model prompt. It never replaces G2T execution authority.
+
+On the Linux GUI host, install Python 3.10+ and the optional offline tokenizer:
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -e '.[tui]'
+.venv/bin/jev-anything-tui --help
+```
+
+Configure `DEEPSEEK_API_KEY` privately in the environment and obtain a compatible
+offline `tokenizer.json` for the selected model. No tokenizer weights or personal
+credentials are included. Build GUI2TUI's `gui2tui-agent` from the compatible
+source below, in the same Linux desktop/DBus session as the application:
+
+```sh
+.venv/bin/jev-anything-tui \
+  --goal 'The complete user goal' --text 'Exact non-secret user literal' \
+  --tokenizer-json /path/to/tokenizer.json \
+  --max-steps 12 --max-actions 12 \
+  --max-prompt-tokens 12000 --max-input-tokens 40000 \
+  --trace /path/to/new-trace.jsonl \
+  --bridge /path/to/gui2tui-agent --session desktop --app 'Observed app' --spatial-tui
+```
+
+The tokenizer is mandatory for pre-call budget checks; no estimated fallback or
+silent context trimming is used. The trace must not already exist and may contain
+public application data, so keep it private. Never supply passwords as literals.
+The TUI path explicitly uses DeepSeek; `jev-anything-native` keeps Jev as its
+default and supports `--provider deepseek` for full-document comparisons.
+
+The Docker build pins GUI2TUI commit
+`4c8fb7a18fce254152fca87316c8ad1325d5affa` and includes `gui2tui-agent`.
+A model client can run on the host and use an authorized `docker exec -i`
+bridge in the same GUI container. The old workbench below remains a separate
+fixture/compatibility path; its model menu does not select the spatial-TUI loop.
+See [WORKFLOWS.md](docs/WORKFLOWS.md) for recorded zero-model replay and original
+desktop handoff. Viewer dependencies are explicitly configured, not auto-started.
+
+## Generic web testing (development)
+
+当前公共协议见 [GUI2TUI Agent protocol](https://github.com/Chenhzjs/GUI2TUI/blob/main/docs/agent-protocol.md)。
+历史冻结包和原始实验材料保留在开发者本地，不属于本仓库的公开附件。
+
+The [native web test path](docs/NATIVE_WEB.md) uses GUI2TUI's development
+`gui2tui-agent` JSONL bridge. It discovers public operations without per-site
+labels or scenario backends, supports `MIYANG_API_KEY`, and retains fresh
+Accessibility validation and readback. The original fixture workbench below
+continues to use its compatibility adapter. See the
+[measured native test results](docs/NATIVE_WEB_RESULTS.md) for four completed
+tasks and the recorded public-page loading boundary.
+
 ## GUI2TUI submodule
 
 This repository is the Jev integration layer. Add it to the GUI2TUI
 repository as a pinned submodule:
 
 ```bash
-git submodule add https://github.com/kiyotakali/Jev-Anything.git integrations/jev-anything
+git submodule add https://github.com/Chenhzjs/Jev-Anything.git integrations/jev-anything
 git submodule update --init --recursive
 ```
 
@@ -129,8 +194,7 @@ fixture's application identity, window title and context. The plugin API is
 independent of these fixtures: an adapter provides `snapshot`, `validate`,
 `execute` and `verify`.
 
-The current repository is ready for submodule-based collaboration, but the
-scene-label bridge and PTY submission are still compatibility layers. Native
-GUI2TUI operation IDs, generations, scopes and execution receipts remain the
-next upstream integration work; this repository does not claim a general GUI
-benchmark yet.
+The scene-label bridge and PTY submission used by the old workbench remain
+compatibility layers. The separate native/shared-TUI clients use GUI2TUI's native
+operation IDs, generation, scope and authoritative execution receipts. They do
+not claim a general GUI benchmark or universal independent task completion.

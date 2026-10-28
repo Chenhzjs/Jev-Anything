@@ -10,7 +10,7 @@ inspection, focus, scope, execution or readback authority.
 From the GUI2TUI repository:
 
 ```bash
-git submodule add https://github.com/kiyotakali/Jev-Anything.git integrations/jev-anything
+git submodule add https://github.com/Chenhzjs/Jev-Anything.git integrations/jev-anything
 git submodule update --init --recursive
 ```
 
@@ -26,6 +26,24 @@ The submodule is independently installable when its Python API is needed:
 ```bash
 python3 -m pip install -e integrations/jev-anything
 ```
+
+For the shared spatial-TUI runner, install `integrations/jev-anything[tui]`
+instead. The installed command is `jev-anything-tui`; it consumes the Rust
+renderer through `gui2tui-agent --spatial-tui`. See [TUI_READER.md](TUI_READER.md)
+for budgets, the required offline tokenizer, exact-publication batches and
+incremental messages. Model configuration stays in the environment.
+
+GUI2TUI is the primary repository. Jev is optional: ordinary Rust builds and
+Human TUI usage must work without initializing the submodule. The two projects
+communicate through the versioned JSONL bridge; neither imports the other's
+source tree. Keep the existing standalone developer checkout in place. The
+submodule is a separate checkout pinned to an explicit reviewed commit.
+
+The Docker build in this fork pins GUI2TUI
+`4c8fb7a18fce254152fca87316c8ad1325d5affa`, including `gui2tui-agent`.
+Updating the parent submodule pointer does not implicitly change that build pin.
+Review both when upgrading protocol versions. There is no recursive submodule
+back from Jev to GUI2TUI.
 
 The Docker workbench remains the reference live environment because it
 provides Linux, Xvfb, D-Bus, AT-SPI and the GUI2TUI fixture:
@@ -66,7 +84,12 @@ The plugin never accepts a model-generated command, coordinate or arbitrary
 operation. If GUI2TUI does not expose a required semantic operation, the
 result is `unsupported` with `capability_unavailable`.
 
-## Current bridge and migration target
+## Historical workbench bridge and migration proposal
+
+This section describes the older fixture/PTY adapter. Native and shared-TUI
+clients now exist independently in `native.py` and `tui.py`; the old workbench
+does not automatically route through them. The proposal below is retained as
+historical context, not a claim that the new native authority is absent.
 
 The current `Gui2TuiSceneAdapter` consumes the text produced by
 `GUI2TUI --dump-scene`. It uses configured labels and visible bindings to
